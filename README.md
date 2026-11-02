@@ -1,75 +1,29 @@
-# React + TypeScript + Vite
+# KNITTY
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Knitty is a work in progress, lovingly being customized and developed. More cozy details are on the way! ♡
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+# LOCALLY RUN
 ```
+git clone https://github.com/Arr0b4/KNITTY_WEBSITE.git
+cd KNITTY_WEBSITE/knitty_frontend
+npm ci
+npm run dev
+```
+Open the local address printed by Vite (usually http://localhost:5173). If that port is busy, Vite may use another one.
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Windows PowerShell: If npm is blocked by script execution policy, use npm.cmd ci and npm.cmd run dev instead.
 
+##Project General Structure
 ```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+knitty_frontend/
+├── public/          # Static assets
+├── src/
+│   ├── assets/      # Images, icons and fonts
+│   ├── components/  # Reusable UI
+│   ├── view/        # Pages and page sections
+│   ├── api/         # API requests
+│   └── main.tsx     # App entry point
+├── package.json
+└── vite.config.ts
 
 ```
