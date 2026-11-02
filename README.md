@@ -13,7 +13,7 @@ Open the local address printed by Vite (usually http://localhost:5173). If that 
 
 Windows PowerShell: If npm is blocked by script execution policy, use npm.cmd ci and npm.cmd run dev instead.
 
-##Project General Structure
+## Project General Structure
 ```js
 knitty_frontend/
 ├── public/          # Static assets
