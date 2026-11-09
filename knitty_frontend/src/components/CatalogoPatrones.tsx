@@ -67,7 +67,7 @@ export default function CatalogoPatrones() {
         <div className="knitty-grid">
           {visibles.map((p) => (
             <article className="knitty-patron" key={p.id}>
-              <div className="knitty-placeholder" aria-hidden="true">🧶</div>
+              <div className="knitty-placeholder" aria-hidden="true"></div>
               <div className="knitty-patron-body">
                 <h2>{p.nombre}</h2>
                 <p>{p.descripcion}</p>
