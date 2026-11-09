@@ -1,0 +1,15 @@
+.knitty-catalogo { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; }
+.knitty-catalogo h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: .5rem; }
+.knitty-categorias { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1.5rem 0; }
+.knitty-categorias a { color: inherit; border: 1px solid #bca4a4; padding: .6rem 1rem; border-radius: 99px; text-decoration: none; }
+.knitty-categorias a[aria-current='page'] { background: #534238; color: white; }
+.knitty-buscar { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
+.knitty-buscar input { min-width: 0; width: min(100%, 350px); padding: .7rem; border: 1px solid #aaa; border-radius: 6px; }
+.knitty-buscar button { padding: .7rem 1.2rem; border-radius: 6px; border: 1px solid currentColor; }
+.knitty-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 245px), 1fr)); gap: 1.5rem; }
+.knitty-patron { overflow: hidden; border: 1px solid #e7dfdb; border-radius: 12px; background: #fff; color: #322c2a; }
+.knitty-placeholder { display: grid; place-items: center; min-height: 170px; background: #f6eae3; font-size: 4rem; }
+.knitty-patron-body { padding: 1.25rem; }
+.knitty-patron-body h2 { font-size: 1.25rem; margin-bottom: .75rem; }
+.knitty-patron-body strong { display: inline-block; margin-top: .75rem; font-size: 1.2rem; }
+.knitty-aviso { margin-top: 2rem; font-size: .9rem; opacity: .8; }

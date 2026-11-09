@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "https://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Base de datos a la que se conectará Hibernate -->
+        <property name="hibernate.connection.url">
+            jdbc:mariadb://localhost:3306/db_knitty
+        </property>
+        <!-- Credenciales de MariaDB -->
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password"></property>
+        <!-- Mostrar en consola el SQL generado por Hibernate -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+    </session-factory>
+</hibernate-configuration>

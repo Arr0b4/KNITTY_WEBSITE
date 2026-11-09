@@ -1,0 +1,445 @@
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import authReducer from "../utils/authSlice";
+import clientCartReducer from "../utils/cartSlice";
+import reducer, {
+	addCartItem,
+	clearServerCart,
+	fetchCart,
+	mergeGuestCart,
+	removeCartItem,
+	updateCartItem,
+	updateCartItemMeasurements,
+} from "./serverCartSlice";
+import wishlistReducer from "./wishListSlice";
+
+vi.mock("../api/axiosInstance", () => ({
+	default: {
+		get: vi.fn(),
+		post: vi.fn(),
+		put: vi.fn(),
+		delete: vi.fn(),
+	},
+}));
+
+vi.mock("../types/token", () => ({
+	getAccessToken: vi.fn(),
+}));
+
+import api from "../api/axiosInstance";
+import { getAccessToken } from "../types/token";
+
+const mockedApi = api as unknown as {
+	get: ReturnType<typeof vi.fn>;
+	post: ReturnType<typeof vi.fn>;
+	put: ReturnType<typeof vi.fn>;
+	delete: ReturnType<typeof vi.fn>;
+};
+
+const mockedGetToken = getAccessToken as unknown as ReturnType<typeof vi.fn>;
+
+// Reducers are combined up front so configureStore receives a single Reducer
+// rather than a ReducersMapObject. Passing the map inline together with an
+// untyped preloadedState makes TS resolve the reducer option to Reducer<S>
+// only, which triggers TS2353 on the first key of the object literal.
+const rootReducer = combineReducers({
+	auth: authReducer,
+	serverCart: reducer,
+	wishlist: wishlistReducer,
+	cart: clientCartReducer,
+});
+
+function makeStore(preloadedState?: any) {
+	return configureStore({
+		reducer: rootReducer,
+		preloadedState: preloadedState as any,
+	});
+}
+
+beforeEach(() => {
+	vi.clearAllMocks();
+});
+
+describe("serverCartSlice reducer", () => {
+	it("returns initial state", () => {
+		const state = reducer(undefined, { type: "@@INIT" });
+		expect(state).toEqual({ cart: null, loading: false, error: null });
+	});
+
+	it("clearServerCart empties items but keeps cart shell", () => {
+		const state = reducer(
+			{
+				cart: { id: 1, items: [{ id: 1 }] } as any,
+				loading: false,
+				error: "x",
+			},
+			clearServerCart(),
+		);
+		expect(state.cart?.items).toEqual([]);
+		expect(state.error).toBeNull();
+	});
+
+	it("clearServerCart on null cart stays null", () => {
+		const state = reducer(
+			{ cart: null, loading: true, error: null },
+			clearServerCart(),
+		);
+		expect(state.cart).toBeNull();
+		expect(state.loading).toBe(false);
+	});
+});
+
+describe("fetchCart thunk", () => {
+	it("returns null without hitting API when no token", async () => {
+		mockedGetToken.mockReturnValue(null);
+		const store = makeStore();
+
+		await store.dispatch(fetchCart());
+
+		expect(mockedApi.get).not.toHaveBeenCalled();
+		expect(store.getState().serverCart.cart).toBeNull();
+	});
+
+	it("fetches and stores cart when token exists", async () => {
+		mockedGetToken.mockReturnValue("fake-token");
+		const cartData = { id: 1, items: [] };
+		mockedApi.get.mockResolvedValueOnce({ data: cartData });
+
+		const store = makeStore();
+		await store.dispatch(fetchCart());
+
+		expect(mockedApi.get).toHaveBeenCalledWith("/products/cart/");
+		expect(store.getState().serverCart.cart).toEqual(cartData);
+		expect(store.getState().serverCart.loading).toBe(false);
+	});
+
+	it("sets error on rejection", async () => {
+		mockedGetToken.mockReturnValue("fake-token");
+		mockedApi.get.mockRejectedValueOnce(new Error("network down"));
+
+		const store = makeStore();
+		await store.dispatch(fetchCart());
+
+		expect(store.getState().serverCart.error).toContain("network down");
+		expect(store.getState().serverCart.loading).toBe(false);
+	});
+});
+
+describe("addCartItem thunk", () => {
+	it("sends correct body and clamps quantity to min 1", async () => {
+		mockedApi.post.mockResolvedValueOnce({ data: { id: 5, quantity: 1 } });
+		const store = makeStore();
+
+		await store.dispatch(
+			addCartItem({ product_size_id: 10, quantity: 0 } as any),
+		);
+
+		expect(mockedApi.post).toHaveBeenCalledWith(
+			"/products/cart/items/",
+			expect.objectContaining({ product_size_id: 10, quantity: 1 }),
+		);
+	});
+
+	// The backend reads product_size_id only (CartItemAPIView.post) and returns
+	// 400 for genuine problems too — out of stock, unavailable product, quantity
+	// above the remaining stock. A single request must surface that message
+	// as-is rather than being retried under a different field name.
+	it("does not retry on a 400 and surfaces the server error", async () => {
+		const badRequestError = {
+			response: {
+				status: 400,
+				data: { quantity: ["Only 2 items are available in this size."] },
+			},
+		};
+		mockedApi.post.mockRejectedValueOnce(badRequestError);
+
+		const store = makeStore();
+		const result = await store.dispatch(
+			addCartItem({ product_size_id: 10, quantity: 3 } as any),
+		);
+
+		expect(mockedApi.post).toHaveBeenCalledTimes(1);
+		expect(result.type).toBe("serverCart/addItem/rejected");
+	});
+
+	it("does not retry on non-400 errors", async () => {
+		const serverError = { response: { status: 500 } };
+		mockedApi.post.mockRejectedValueOnce(serverError);
+
+		const store = makeStore();
+		const result = await store.dispatch(
+			addCartItem({ product_size_id: 10 } as any),
+		);
+
+		expect(mockedApi.post).toHaveBeenCalledTimes(1);
+		expect(result.type).toBe("serverCart/addItem/rejected");
+	});
+
+	it("adds new item to cart items on fulfilled", async () => {
+		mockedApi.post.mockResolvedValueOnce({ data: { id: 99, quantity: 1 } });
+		const store = makeStore({
+			serverCart: { cart: { id: 1, items: [] }, loading: false, error: null },
+		});
+
+		await store.dispatch(addCartItem({ product_size_id: 1 } as any));
+
+		expect(store.getState().serverCart.cart?.items).toHaveLength(1);
+		expect(store.getState().serverCart.cart?.items[0].id).toBe(99);
+	});
+
+	it("replaces existing item with same id instead of duplicating", async () => {
+		mockedApi.post.mockResolvedValueOnce({ data: { id: 1, quantity: 5 } });
+		const store = makeStore({
+			serverCart: {
+				cart: { id: 1, items: [{ id: 1, quantity: 2 }] },
+				loading: false,
+				error: null,
+			},
+		});
+
+		await store.dispatch(addCartItem({ product_size_id: 1 } as any));
+
+		const items = store.getState().serverCart.cart?.items;
+		expect(items).toHaveLength(1);
+		expect(items?.[0].quantity).toBe(5);
+	});
+});
+
+describe("updateCartItem thunk", () => {
+	it("clamps quantity below 1 to 1", async () => {
+		mockedApi.put.mockResolvedValueOnce({ data: { id: 1, quantity: 1 } });
+		const store = makeStore();
+
+		await store.dispatch(updateCartItem({ item_id: 1, quantity: -5 }));
+
+		expect(mockedApi.put).toHaveBeenCalledWith("/products/cart/items/1/", {
+			quantity: 1,
+		});
+	});
+
+	it("updates matching item in state", async () => {
+		mockedApi.put.mockResolvedValueOnce({ data: { id: 1, quantity: 7 } });
+		const store = makeStore({
+			serverCart: {
+				cart: { id: 1, items: [{ id: 1, quantity: 2 }] },
+				loading: false,
+				error: null,
+			},
+		});
+
+		await store.dispatch(updateCartItem({ item_id: 1, quantity: 7 }));
+
+		expect(store.getState().serverCart.cart?.items[0].quantity).toBe(7);
+	});
+});
+
+describe("removeCartItem thunk", () => {
+	it("removes item from cart by id", async () => {
+		mockedApi.delete.mockResolvedValueOnce({});
+		const store = makeStore({
+			serverCart: {
+				cart: {
+					id: 1,
+					items: [{ id: 1 }, { id: 2 }],
+				},
+				loading: false,
+				error: null,
+			},
+		});
+
+		await store.dispatch(removeCartItem(1));
+
+		const items = store.getState().serverCart.cart?.items;
+		expect(items).toHaveLength(1);
+		expect(items?.[0].id).toBe(2);
+	});
+});
+
+describe("updateCartItemMeasurements thunk", () => {
+	it("sends measurements without item_id in body", async () => {
+		mockedApi.put.mockResolvedValueOnce({ data: { id: 1 } });
+		const store = makeStore();
+
+		await store.dispatch(
+			updateCartItemMeasurements({ item_id: 1, custom_bust: "90" }),
+		);
+
+		expect(mockedApi.put).toHaveBeenCalledWith("/products/cart/items/1/", {
+			custom_bust: "90",
+		});
+	});
+});
+
+let lineIdCounter = 0;
+
+function makeGuestItem(overrides: Partial<any> = {}) {
+	lineIdCounter += 1;
+
+	return {
+		lineId: `line-${lineIdCounter}`,
+		id: 1,
+		name: "Sweater",
+		price: 50,
+		product_size_id: 10,
+		quantity: 1,
+		custom_length_selected: false,
+		custom_length_cm: null,
+		custom_length_surcharge: 0,
+		custom_bust: "",
+		custom_underbust: "",
+		custom_waist: "",
+		custom_hips: "",
+		custom_height: "",
+		custom_cup: "",
+		custom_fit_notes: "",
+		...overrides,
+	};
+}
+
+describe("mergeGuestCart thunk", () => {
+	it("does nothing without token", async () => {
+		mockedGetToken.mockReturnValue(null);
+		const store = makeStore();
+
+		await store.dispatch(mergeGuestCart());
+
+		expect(mockedApi.post).not.toHaveBeenCalled();
+	});
+
+	it("does nothing when guest cart is empty", async () => {
+		mockedGetToken.mockReturnValue("fake-token");
+		const store = makeStore({ cart: { items: [] } });
+
+		await store.dispatch(mergeGuestCart());
+
+		expect(mockedApi.post).not.toHaveBeenCalled();
+	});
+
+	it("posts each guest item and clears guest cart when all succeed", async () => {
+		mockedGetToken.mockReturnValue("fake-token");
+		mockedApi.post.mockResolvedValue({ data: { id: 1 } });
+
+		const store = makeStore({
+			cart: {
+				items: [
+					makeGuestItem({ id: 1, product_size_id: 10, quantity: 2 }),
+					makeGuestItem({ id: 2, product_size_id: 20, quantity: 1 }),
+				],
+			},
+		});
+
+		await store.dispatch(mergeGuestCart());
+
+		expect(mockedApi.post).toHaveBeenCalledTimes(2);
+		expect(mockedApi.post).toHaveBeenCalledWith(
+			"/products/cart/items/",
+			expect.objectContaining({ product_size_id: 10, quantity: 2 }),
+		);
+		// после успешного merge гостевая корзина должна очиститься
+		expect(store.getState().cart.items).toEqual([]);
+	});
+
+	it("removes only the succeeded line after a partial failure, leaving the failed line for the next attempt", async () => {
+		mockedGetToken.mockReturnValue("fake-token");
+		mockedApi.post
+			.mockResolvedValueOnce({ data: { id: 1 } })
+			.mockRejectedValueOnce({ response: { status: 500 } });
+
+		const store = makeStore({
+			cart: {
+				items: [
+					makeGuestItem({
+						lineId: "line-ok",
+						id: 1,
+						product_size_id: 10,
+						quantity: 1,
+					}),
+					makeGuestItem({
+						lineId: "line-fail",
+						id: 2,
+						product_size_id: 20,
+						quantity: 1,
+					}),
+				],
+			},
+		});
+
+		await store.dispatch(mergeGuestCart());
+
+		const items = store.getState().cart.items;
+		expect(items).toHaveLength(1);
+		expect(items[0].lineId).toBe("line-fail");
+	});
+
+	it("a second merge attempt only posts the line that failed the first time", async () => {
+		mockedGetToken.mockReturnValue("fake-token");
+		mockedApi.post
+			.mockResolvedValueOnce({ data: { id: 1 } })
+			.mockRejectedValueOnce({ response: { status: 500 } });
+
+		const store = makeStore({
+			cart: {
+				items: [
+					makeGuestItem({
+						lineId: "line-ok",
+						id: 1,
+						product_size_id: 10,
+						quantity: 1,
+					}),
+					makeGuestItem({
+						lineId: "line-fail",
+						id: 2,
+						product_size_id: 20,
+						quantity: 1,
+					}),
+				],
+			},
+		});
+
+		await store.dispatch(mergeGuestCart());
+		expect(mockedApi.post).toHaveBeenCalledTimes(2);
+
+		mockedApi.post.mockClear();
+		mockedApi.post.mockResolvedValueOnce({ data: { id: 2 } });
+
+		await store.dispatch(mergeGuestCart());
+
+		expect(mockedApi.post).toHaveBeenCalledTimes(1);
+		expect(mockedApi.post).toHaveBeenCalledWith(
+			"/products/cart/items/",
+			expect.objectContaining({ product_size_id: 20 }),
+		);
+		expect(store.getState().cart.items).toEqual([]);
+	});
+
+	// custom_length_cm and custom_length_surcharge are read_only on
+	// CartItemSerializer and snapshotted server-side from the product, so the
+	// client only needs to forward the custom_length_selected flag.
+	it("forwards the custom length flag when merging", async () => {
+		mockedGetToken.mockReturnValue("fake-token");
+		mockedApi.post.mockResolvedValue({ data: { id: 1 } });
+
+		const store = makeStore({
+			cart: {
+				items: [
+					makeGuestItem({
+						id: 1,
+						product_size_id: 10,
+						custom_length_selected: true,
+						custom_length_cm: 120,
+						custom_length_surcharge: 15,
+					}),
+				],
+			},
+		});
+
+		await store.dispatch(mergeGuestCart());
+
+		expect(mockedApi.post).toHaveBeenCalledWith(
+			"/products/cart/items/",
+			expect.objectContaining({
+				custom_length_selected: true,
+			}),
+		);
+	});
+});
