@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   obtenerCategorias,
   obtenerPatrones,
@@ -16,6 +16,7 @@ export default function CatalogoPatrones() {
   const [params, setParams] = useSearchParams();
   const categoria = params.get('category')?.toLowerCase() ?? '';
   const busqueda = params.get('search')?.trim().toLowerCase() ?? '';
+  const tituloCategoria = categorias.find((item) => item.nombre.toLowerCase() === categoria)?.nombre;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -40,45 +41,42 @@ export default function CatalogoPatrones() {
 
   return (
     <section className="knitty-catalogo" aria-label="Catálogo de patrones de crochet">
-      <h1>Patrones de crochet</h1>
-      <p>Explora nuestros patrones digitales para tejer tus propias creaciones.</p>
-      <nav className="knitty-categorias" aria-label="Filtrar por categoría">
-        <Link to="/catalog" aria-current={!categoria ? 'page' : undefined}>Todos</Link>
-        {categorias.map((item) => (
-          <Link key={item.id} to={`/catalog?category=${encodeURIComponent(item.nombre.toLowerCase())}`}
-            aria-current={categoria === item.nombre.toLowerCase() ? 'page' : undefined}>
-            {item.nombre}
-          </Link>
-        ))}
-      </nav>
+      <div className="knitty-catalogo__encabezado">
+        <div>
+          <p className="knitty-catalogo__etiqueta">KNITTY / PATTERNS</p>
+          <h1>{tituloCategoria ?? 'All patterns'}</h1>
+        </div>
+      </div>
       <form className="knitty-buscar" onSubmit={(e) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         const valor = String(data.get('search') ?? '').trim();
         setParams((actual) => { const nuevo = new URLSearchParams(actual); if (valor) nuevo.set('search', valor); else nuevo.delete('search'); return nuevo; });
       }}>
-        <input name="search" type="search" key={busqueda} defaultValue={busqueda} placeholder="Buscar patrones..." aria-label="Buscar patrones" />
-        <button type="submit">Buscar</button>
+        <input name="search" type="search" key={busqueda} defaultValue={busqueda} placeholder="Search patterns..." aria-label="Buscar patrones" />
+        <button type="submit">SEARCH</button>
       </form>
       {cargando && <p role="status">Cargando el catálogo…</p>}
       {error && <p role="alert">No se pudo cargar el catálogo: {error}. Comprueba que Spring Boot esté iniciado.</p>}
       {!cargando && !error && visibles.length === 0 && <p>No hay patrones para esta selección.</p>}
       {!cargando && !error && (
+        <>
+        <p className="knitty-catalogo__contador">{visibles.length} {visibles.length === 1 ? 'pattern' : 'patterns'}</p>
         <div className="knitty-grid">
           {visibles.map((p) => (
             <article className="knitty-patron" key={p.id}>
-              <div className="knitty-placeholder" aria-hidden="true"></div>
+              <div className="knitty-placeholder" aria-hidden="true" />
               <div className="knitty-patron-body">
                 <h2>{p.nombre}</h2>
                 <p>{p.descripcion}</p>
-                <p>Nivel: {p.nivelDificultad ?? 'sin especificar'}</p>
+                <p className="knitty-patron__nivel">{p.nivelDificultad ?? 'Sin nivel especificado'}</p>
                 <strong>{Number(p.precio).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</strong>
               </div>
             </article>
           ))}
         </div>
+        </>
       )}
-      <p className="knitty-aviso">El catálogo funciona en modo consulta. La compra y la descarga requieren implementar autenticación y pagos en el backend.</p>
     </section>
   );
 }
