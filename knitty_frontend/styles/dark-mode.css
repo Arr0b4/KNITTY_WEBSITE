@@ -1,0 +1,270 @@
+/* =========================================================================
+   DARK MODE STYLES
+   ========================================================================= */
+
+[data-theme="dark"] {
+	--c-black: #f0f0f0;
+	--c-white-orig: #fff;
+	--text-primary: #ededed;
+	--text-secondary: #e0e0e0;
+	--text-muted: #a0a0a0;
+	--text: #ededed;
+	--text-soft: rgb(255 255 255 / 85%);
+
+	--surface: #18181b;
+	--surface-soft: #202024;
+	--surface-warm: #141416;
+	--glass-dark: rgb(16 16 18 / 94%);
+	--glass-white-soft: rgb(28 28 32 / 72%);
+	--glass-white-strong: rgb(34 34 38 / 88%);
+	--surface-glass-light: rgb(24 24 28 / 65%);
+
+	--border: rgb(255 255 255 / 14%);
+	--border-soft: rgb(255 255 255 / 8%);
+	--border-light: #27272a;
+	--border-strong: #3f3f46;
+
+	--focus-ring: #ffffff;
+	--focus-ring-light: rgb(255 255 255 / 85%);
+	--focus-ring-dark: rgb(255 255 255 / 45%);
+
+	--shadow-soft: 0 18px 60px rgb(0 0 0 / 40%);
+	--shadow-dropdown: 0 18px 60px rgb(0 0 0 / 70%);
+	--shadow-modal: 0 30px 90px rgb(0 0 0 / 85%);
+	--shadow-modal-lg: 0 25px 80px rgb(0 0 0 / 60%);
+}
+
+[data-theme="dark"] body {
+	background-color: #111113;
+	color: #ededed;
+}
+
+[data-theme="dark"] .layout-main {
+	background-color: #111113;
+}
+
+/* Page containers */
+[data-theme="dark"] .about,
+[data-theme="dark"] .accountRestore,
+[data-theme="dark"] .auth,
+[data-theme="dark"] .cart,
+[data-theme="dark"] .contact,
+[data-theme="dark"] .dashboard,
+[data-theme="dark"] .faq,
+[data-theme="dark"] .help,
+[data-theme="dark"] .order,
+[data-theme="dark"] .order-history,
+[data-theme="dark"] .order-success,
+[data-theme="dark"] .passwordChange,
+[data-theme="dark"] .passwordResetConfirm,
+[data-theme="dark"] .policy,
+[data-theme="dark"] .catalog,
+[data-theme="dark"] .product-detail,
+[data-theme="dark"] .productDetail,
+[data-theme="dark"] .register,
+[data-theme="dark"] .sizeGuide,
+[data-theme="dark"] .wishlist,
+[data-theme="dark"] .checkout,
+[data-theme="dark"] .loginChoice {
+	background-color: #111113;
+	color: #ededed;
+}
+
+/* Header & navigation in dark mode */
+[data-theme="dark"] .header .bar.dark {
+	background: #ededed;
+}
+
+[data-theme="dark"] .header .logo.dark {
+	color: #ededed;
+}
+
+[data-theme="dark"] .header .login-button.dark,
+[data-theme="dark"] .header .help-button.dark,
+[data-theme="dark"] .header .shopping-bag.dark,
+[data-theme="dark"] .header .user-menu__btn.dark {
+	color: #ededed;
+}
+
+[data-theme="dark"] .header .search-input.dark {
+	border-bottom-color: #ededed;
+	color: #ededed;
+}
+
+[data-theme="dark"] .header .search-input.dark::placeholder {
+	color: rgb(255 255 255 / 60%);
+}
+
+/* Dropdowns & User menu */
+[data-theme="dark"] .search-dropdown,
+[data-theme="dark"] .user-menu {
+	background-color: rgb(24 24 28 / 98%);
+	color: #ededed;
+	border: 1px solid rgb(255 255 255 / 12%);
+}
+
+[data-theme="dark"] .search-dropdown__item:hover,
+[data-theme="dark"] .user-menu__item:hover {
+	background-color: rgb(255 255 255 / 8%);
+	color: #fff;
+}
+
+[data-theme="dark"] .user-menu__item {
+	color: #ededed;
+}
+
+[data-theme="dark"] .search-dropdown__name {
+	color: #ededed;
+}
+
+[data-theme="dark"] .search-dropdown__meta {
+	color: #a0a0a0;
+}
+
+[data-theme="dark"] .search-dropdown__all {
+	color: #ededed;
+	border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+/* Forms & inputs */
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+	background-color: #1a1a1e;
+	color: #ededed;
+	border-color: rgb(255 255 255 / 18%);
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+	color: rgb(255 255 255 / 45%);
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+	border-color: #ededed;
+}
+
+/* Modals & cookie banner */
+[data-theme="dark"] .cookieConsent,
+[data-theme="dark"] .cookieModal__panel,
+[data-theme="dark"] .newsletter__panel,
+[data-theme="dark"] .sizeModal__content,
+[data-theme="dark"] .customModal__content,
+[data-theme="dark"] .productModal__content {
+	background-color: #18181b;
+	color: #ededed;
+	border: 1px solid rgb(255 255 255 / 14%);
+}
+
+/* Primary buttons in dark mode */
+[data-theme="dark"] .auth__submit,
+[data-theme="dark"] .register__submit,
+[data-theme="dark"] .checkout__submit,
+[data-theme="dark"] .cart__checkout-btn,
+[data-theme="dark"] .accountRestore__button,
+[data-theme="dark"] .passwordChange__button,
+[data-theme="dark"] .passwordResetConfirm__button,
+[data-theme="dark"] .loginChoice__button--primary {
+	background-color: #ededed;
+	color: #111113;
+}
+
+[data-theme="dark"] .auth__submit:hover,
+[data-theme="dark"] .register__submit:hover,
+[data-theme="dark"] .checkout__submit:hover,
+[data-theme="dark"] .cart__checkout-btn:hover,
+[data-theme="dark"] .accountRestore__button:hover,
+[data-theme="dark"] .passwordChange__button:hover,
+[data-theme="dark"] .passwordResetConfirm__button:hover,
+[data-theme="dark"] .loginChoice__button--primary:hover {
+	background-color: #fff;
+}
+
+/* Footer in dark mode */
+[data-theme="dark"] .footer {
+	background-color: #08080a;
+	color: #ededed;
+	border-top: 1px solid rgb(255 255 255 / 8%);
+}
+
+[data-theme="dark"] .footer__top {
+	border-top-color: rgb(255 255 255 / 8%);
+	border-bottom-color: rgb(255 255 255 / 8%);
+}
+
+[data-theme="dark"] .footer__top-item {
+	border-right-color: rgb(255 255 255 / 8%);
+}
+
+[data-theme="dark"] .footer__input {
+	background-color: transparent;
+	border-bottom-color: rgb(255 255 255 / 40%);
+	color: #ededed;
+}
+
+[data-theme="dark"] .footer__button {
+	background-color: #ededed;
+	color: #08080a;
+}
+
+[data-theme="dark"] .footer__button:hover {
+	background-color: #fff;
+}
+
+/* FAQ, Help, Policies */
+[data-theme="dark"] .faq__item {
+	border-bottom-color: rgb(255 255 255 / 12%);
+}
+
+[data-theme="dark"] .faq__question {
+	color: #ededed;
+}
+
+[data-theme="dark"] .faq__answer {
+	color: #a0a0a0;
+}
+
+[data-theme="dark"] .contact__link {
+	color: #ededed;
+}
+
+[data-theme="dark"] .help__btn {
+	background-color: #ededed;
+	color: #111113;
+}
+
+[data-theme="dark"] .help__line {
+	background-color: rgb(255 255 255 / 12%);
+}
+
+[data-theme="dark"] .policy__header,
+[data-theme="dark"] .policy__section {
+	border-bottom-color: rgb(255 255 255 / 10%);
+}
+
+/* Catalog cards & filters */
+[data-theme="dark"] .catalog__filter-btn,
+[data-theme="dark"] .catalog__sort-btn {
+	background-color: #18181b;
+	color: #ededed;
+	border-color: rgb(255 255 255 / 15%);
+}
+
+[data-theme="dark"] .catalog__card-name,
+[data-theme="dark"] .catalog__card-price {
+	color: #ededed;
+}
+
+/* Cart table and items */
+[data-theme="dark"] .cart__item,
+[data-theme="dark"] .cart__summary {
+	border-color: rgb(255 255 255 / 12%);
+}
+
+[data-theme="dark"] .cart__item-title,
+[data-theme="dark"] .cart__item-price {
+	color: #ededed;
+}
+

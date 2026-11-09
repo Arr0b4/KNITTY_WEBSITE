@@ -1,0 +1,16 @@
+.knitty-acceso { display: grid; place-items: center; padding: 3rem 1rem; min-height: 75vh; background: var(--background, #f7f1ee); color: var(--text-color, #302827); }
+.knitty-acceso__tarjeta { width: min(100%, 470px); padding: clamp(1.5rem, 5vw, 2.5rem); border-radius: 16px; border: 1px solid #c6aaa1; background: #fffaf7; color: #302827; box-shadow: 0 15px 35px #00000015; }
+.knitty-acceso__tarjeta h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); margin-bottom: 1rem; }
+.knitty-acceso__tarjeta form { display: grid; gap: 1.1rem; margin: 1.5rem 0; }
+.knitty-acceso__tarjeta label { display: grid; gap: .4rem; font-weight: 600; }
+.knitty-acceso__tarjeta input { width: 100%; padding: .8rem; border: 1px solid #8e756e; border-radius: 8px; background: white; color: #302827; }
+.knitty-acceso__tarjeta button { padding: .85rem; border: 0; border-radius: 8px; background: #614a45; color: white; cursor: pointer; }
+.knitty-acceso__tarjeta button:disabled { opacity: .6; cursor: wait; }
+.knitty-acceso__tarjeta a { color: #704f44; text-decoration: underline; display: inline-block; margin: .45rem 0; }
+.knitty-acceso__tarjeta :focus-visible { outline: 3px solid #bd7f36; outline-offset: 3px; }
+.knitty-acceso__error { color: #9b1b18; font-weight: 600; }
+[data-theme='dark'] .knitty-acceso { background: #211f26; }
+[data-theme='dark'] .knitty-acceso__tarjeta { background: #322d35; color: #f6f0ec; border-color: #827481; }
+[data-theme='dark'] .knitty-acceso__tarjeta a { color: #f5bba6; }
+[data-theme='dark'] .knitty-acceso__tarjeta button { background: #e0b09a; color: #281b1a; }
+[data-theme='dark'] .knitty-acceso__error { color: #ffb5ad; }
