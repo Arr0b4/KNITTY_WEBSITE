@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Offline | KNITTY</title>
+    <style>
+
+      @font-face {
+        font-family: "Cormorant Garamond";
+        src: url("/offline-cormorant.woff2") format("woff2");
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+      }
+      * { box-sizing: border-box; }
+      html { color-scheme: light; }
+      body {
+        min-width: 320px;
+        min-height: 100dvh;
+        margin: 0;
+        background: #fff;
+        color: #111;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .header {
+        min-height: 108px;
+        display: flex;
+        align-items: center;
+        padding: 22px clamp(20px, 3vw, 32px);
+        border-bottom: 1px solid #eee;
+      }
+      .logo {
+        color: inherit;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(42px, 5vw, 64px);
+        letter-spacing: .1em;
+        line-height: 1;
+        font-weight: 400;
+        text-decoration: none;
+      }
+      main {
+        min-height: calc(100dvh - 108px);
+        padding: 40px 24px 84px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      .content { width: 100%; max-width: 500px; }
+      .eyebrow {
+        margin: 0 0 18px;
+        font-size: 12px;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: #666;
+      }
+      h1 {
+        margin: 0 0 20px;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(44px, 7vw, 70px);
+        font-weight: 400;
+        line-height: 1.02;
+      }
+      p.description {
+        max-width: 420px;
+        margin: 0 auto 34px;
+        color: #555;
+        font-size: 15px;
+        line-height: 1.75;
+      }
+      .retry {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 210px;
+        min-height: 46px;
+        padding: 12px 26px;
+        border: 1px solid #111;
+        border-radius: 0;
+        background: #111;
+        color: #fff;
+        font: inherit;
+        font-size: 13px;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color 160ms ease, color 160ms ease;
+      }
+      .retry:hover { background: #fff; color: #111; }
+      .retry:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+      @media (max-width: 600px) {
+        .header { min-height: 88px; }
+        main { min-height: calc(100dvh - 88px); }
+      }
+      @media (prefers-color-scheme: dark) {
+        html { color-scheme: dark; }
+        body { background: #111113; color: #f2eee9; }
+        .header { border-bottom-color: #2b292b; }
+        .eyebrow, p.description { color: #b8b1ac; }
+        .retry { border-color: #f2eee9; background: #f2eee9; color: #111113; }
+        .retry:hover { background: transparent; color: #f2eee9; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header"><a class="logo" href="/" aria-label="KNITTY home">K N I T T Y</a></header>
+    <main>
+      <div class="content">
+        <p class="eyebrow">KNITTY / CONNECTION</p>
+        <h1>We'll be back soon</h1>
+        <p class="description">This page isn't available without a connection. Once you're back online, you can carry on browsing KNITTY.</p>
+        <button class="retry" type="button" onclick="window.location.reload()">RETRY CONNECTION</button>
+      </div>
+    </main>
+  </body>
+</html>
