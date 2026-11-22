@@ -3,6 +3,7 @@ import type { Stripe } from "@stripe/stripe-js";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
+	Link,
 	Route,
 	BrowserRouter as Router,
 	Routes,
@@ -10,12 +11,13 @@ import {
 } from "react-router-dom";
 import { setOnUnauthorized } from "./api/axiosInstance";
 import AccountRestore from "./components/AccountRestore";
-import Authorization from "./components/Authorization";
+import CatalogoPatrones from "./components/CatalogoPatrones";
+import AccesoKnitty from "./components/AccesoKnitty";
 import CookieConsent from "./components/cookies/CookieConsent";
 import LoginChoice from "./components/LoginChoice";
 import PasswordChange from "./components/PasswordChange";
 import PasswordResetConfirm from "./components/PasswordResetConfirm";
-import Register from "./components/Register";
+import ZonaKnitty from "./components/ZonaKnitty";
 import ThemeToggle from "./components/ThemeToggle";
 import useAuthStorageSync from "./hooks/useAuthStorageSync";
 import type { AppDispatch } from "./store";
@@ -221,7 +223,8 @@ export default function App() {
 						<Route path="/contact" element={<Contact />} />
 						<Route path="/about" element={<About />} />
 
-						<Route path="/catalog" element={<ProductCatalog />} />
+						<Route path="/catalog" element={<CatalogoPatrones />} />
+						<Route path="/catalog-legacy" element={<ProductCatalog />} />
 						<Route path="/product/:id" element={<ProductDetail />} />
 						<Route path="/cart" element={<Cart />} />
 
@@ -236,9 +239,11 @@ export default function App() {
 						/>
 
 						<Route path="/login-choice" element={<LoginChoice />} />
-						<Route path="/login" element={<Authorization />} />
-						<Route path="/authorization" element={<Authorization />} />
-						<Route path="/register" element={<Register />} />
+						<Route path="/login" element={<AccesoKnitty modo="login" />} />
+						<Route path="/authorization" element={<AccesoKnitty modo="login" />} />
+						<Route path="/register" element={<AccesoKnitty modo="registro" />} />
+						<Route path="/zona-usuario" element={<ZonaKnitty />} />
+						<Route path="*" element={<section style={{ padding: '4rem 2rem', textAlign: 'center' }}><h1>Página no encontrada (404)</h1><p>La dirección que buscas no existe.</p><Link to="/">Volver al inicio</Link></section>} />
 						<Route
 							path="/reset-password/:uidb64/:token"
 							element={<PasswordResetConfirm />}
@@ -246,12 +251,9 @@ export default function App() {
 
 						<Route
 							path="/dashboard"
-							element={
-								<PrivateRoute>
-									<Dashboard />
-								</PrivateRoute>
-							}
+							element={<ZonaKnitty />}
 						/>
+						<Route path="/dashboard-legacy" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
 
 						<Route
 							path="/account/change-password"

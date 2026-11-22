@@ -467,37 +467,29 @@ const Header: React.FC = () => {
 						<nav className="menu-content" aria-label="Categories">
 							<ul>
 								<li>
-									<Link to="/catalog?category=woman" onClick={closeMenu}>
+									<Link to="/catalog?category=plushies" onClick={closeMenu}>
 										PLUSHIES
 									</Link>
 								</li>
 
 								<li>
-									<Link to="/catalog?category=man" onClick={closeMenu}>
-										CLOTHING
+									<Link to="/catalog?category=clothes" onClick={closeMenu}>
+										CLOTHES
 									</Link>
 								</li>
 
 								<li>
-									<Link to="/catalog?collection=kids" onClick={closeMenu}>
+									<Link to="/catalog?category=complements" onClick={closeMenu}>
 										COMPLEMENTS
 									</Link>
 								</li>
 
 								<li>
-									<Link to="/catalog?collection=exclusives" onClick={closeMenu}>
+									<Link to="/catalog?category=home" onClick={closeMenu}>
 										HOME DECOR
 									</Link>
 								</li>
 
-								<li>
-									<Link
-										to="/catalog?collection=bestsellers"
-										onClick={closeMenu}
-									>
-										BESTSELLERS
-									</Link>
-								</li>
 							</ul>
 
 							<div className="sidebar-menu__secondary">

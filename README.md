@@ -1,75 +1,62 @@
-# React + TypeScript + Vite
+# KNITTY
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+KNITTY is my interdisciplinary project. It's an e-commerce website focused on crochet patterns, where users can find, buy and sell their own designs.
 
-Currently, two official plugins are available:
+The idea is to create a platform for people who enjoy crochet, where they can discover new patterns and share their creations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Technologies used
 
-## React Compiler
+**Frontend**
+- React
+- TypeScript
+- HTML and CSS
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Backend**
+- Java
+- Spring Boot
+- Hibernate / JPA
 
-## Expanding the ESLint configuration
+**Database**
+- MariaDB
+- XAMPP
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## What I've done so far
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Designed the website and its main pages.
+- Created the database and its relationships.
+- Connected the backend to MariaDB.
+- Implemented user registration and login.
+- Added form validation and session management.
+- Created a user profile.
+- Connected the crochet pattern catalog to the database.
+- Added the main categories: Home, Plushies, Complements and Clothes.
+- Started working on the wishlist, purchases and sales information.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Running the project
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+First, start MySQL/MariaDB from XAMPP and make sure the `db_knitty` database exists.
 
-```
+**Backend**
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Open a terminal in the `knitty-backend` folder:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+    bash mvnw spring-boot:run
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**Frontend**
 
-```
+Open another terminal in the `knitty_frontend` folder:
+
+    npm install
+    npm run dev
+
+Then open http://localhost:5173 in your browser.
+
+## What's next?
+
+The project is still a work in progress. I still need to finish the shopping system, payments, pattern downloads and some user features.
+
+I also want to develop an Android version of KNITTY that uses the same backend and database as the website.
+
+## About
+
+This project is being developed for my studies, and I'll keep updating it as I complete the different parts.

@@ -1,0 +1,1 @@
+import{_ as n}from"./index-C91amd1Q.js";let e=null;function i(){return null}function l(){if(e)return e;const t=i();return t?(e=n(async()=>{const{loadStripe:r}=await import("./index-BGiJ-87v.js");return{loadStripe:r}},[]).then(({loadStripe:r})=>r(t)).catch(()=>null),e):(e=Promise.resolve(null),e)}export{l as getStripePromise};
